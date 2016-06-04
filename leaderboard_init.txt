@@ -1,0 +1,20 @@
+1st
+player01---------- 100
+2nd
+player02---------- 90
+3rd
+player03---------- 80
+4th
+player04---------- 70
+5th
+player05---------- 60
+6th
+player06---------- 50
+7th
+player07---------- 40
+8th
+player08---------- 30
+9th
+player09---------- 20
+10th
+player10---------- 10
