@@ -8,6 +8,8 @@ import de.looksgood.ani.AniSequence;
 import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 
+import gifAnimation.*;
+
 public class Gamestage extends PApplet{
 	private static int windowWidth = MyWindow.windowWidth, windowHeight = MyWindow.windowHeight;
 	//declare resource objects
@@ -40,11 +42,14 @@ public class Gamestage extends PApplet{
 	private STATE state = STATE.MENU;
 	//animation control
 	AniSequence seqPhoto;
+	AniSequence seqLabel;
 	//condition tags
 	protected boolean pause;
 	protected boolean hoverOverOption;
 	protected boolean pressed;
 	protected boolean clickedOption;
+	
+	//PImage[] allFrames = Gif.getPImages(this, "res/bg.gif");
 	
 	public  void setup(){
 		size(windowWidth, windowHeight);
@@ -62,30 +67,26 @@ public class Gamestage extends PApplet{
 		photoSet = 0;
 		//load and set data
 		loadData();
-<<<<<<< HEAD:src/Gamestage.java
-		selectedPhotos = photos.get(photoSet);
 		
-=======
 		leftPhoto = photos.get(0);
 		rightPhoto = photos.get(1);
->>>>>>> d19500d7b41b2bdca8e134646553d3e5c5f86a04:src/client/Gamestage.java
 		//cp5 settings
 		cp5 = new ControlP5(this);
 		PImage[] imgs1 = {loadImage("res/start_btn.png"),loadImage("res/start_hover.png"),loadImage("res/start_btn.png")};
 		cp5.addButton("startBtn")
-			.setPosition(windowWidth/2 - 100, windowHeight * 1/4)
+			.setPosition(windowWidth/4 - 100, 150+windowHeight * 1/8)
 			.setImages(imgs1)
 			.setSize(160, 80)
 			;
 		PImage[] imgs2 = {loadImage("res/help_btn.png"),loadImage("res/help_hover.png"),loadImage("res/start_btn.png")};
 		cp5.addButton("helpBtn")
-			.setPosition(windowWidth/2 - 100, windowHeight * 2/4)
+			.setPosition(windowWidth/4 - 100, 150+windowHeight * 2/8)
 			.setImages(imgs2)
 			.setSize(160, 80)
 			;
 		PImage[] imgs3 = {loadImage("res/exit_btn.png"),loadImage("res/exit_hover.png"),loadImage("res/start_btn.png")};
 		cp5.addButton("quitBtn")
-			.setPosition(windowWidth/2 - 100, windowHeight * 3/4)
+			.setPosition(windowWidth/4 - 100, 150+windowHeight * 3/8)
 			.setImages(imgs3)
 			.setSize(160, 80);
 		
@@ -93,27 +94,41 @@ public class Gamestage extends PApplet{
 		Ani.init(this);
 		seqPhoto = new AniSequence(this);
 		seqPhoto.beginSequence();
+		seqLabel = new AniSequence(this);
+		seqLabel.beginSequence();
 			//step 0
 		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
 		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
 		seqPhoto.beginStep();
+		
+		seqLabel.add(Ani.to(cp5, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		//seqLabel.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		seqLabel.beginStep();		
 			//step 1
 		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
 		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
 		seqPhoto.endStep();
 		seqPhoto.endSequence();
+		
+		//seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+		seqLabel.add(Ani.to(cp5, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+		seqLabel.endStep();
+		seqLabel.endSequence();		
 		//text align
 		textAlign(CENTER);
+		
 	}
 	
 	public void draw(){
 		//set background color
-		background(bg);
+		background(242, 196, 58);
 		if(state == STATE.MENU){
 			cp5.setVisible(true);
+			seqLabel.start();
 			fill(0, 0, 128);
 			textSize(70);
-			text("Final : The Game", windowWidth/2, 120);
+			image(bg, windowWidth/4-50, 100, 750, 750);
+			//text("Final : The Game", windowWidth/2, 120);
 			//reset in-game data
 			score = 0;
 			lives = 3;
@@ -173,6 +188,7 @@ public class Gamestage extends PApplet{
 		}else if(state == STATE.END){
 			//TO-DO
 		}
+		//image(myAnimation, 10,10);
 	}
 	
 	private void loadData(){

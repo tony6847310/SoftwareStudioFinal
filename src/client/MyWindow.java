@@ -2,7 +2,7 @@ package client;
 import javax.swing.JFrame;
 
 public class MyWindow extends JFrame{
-	public final static int windowWidth = 640, windowHeight = 640;
+	public final static int windowWidth = 1000, windowHeight = 750;
 	
 	public static void main(String[] args){
 		Gamestage gs = new Gamestage();
