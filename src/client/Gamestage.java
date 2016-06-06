@@ -43,6 +43,9 @@ public class Gamestage extends PApplet{
 	private Minim mn;
 	private AudioPlayer correct;
 	private AudioPlayer wrong;
+	private AudioPlayer musicMenu;
+	private AudioPlayer musicStart;
+	private AudioPlayer musicJohn;
 	//states
 	private enum STATE{
 		MENU, START, HELP, END, NAME
@@ -132,8 +135,11 @@ public class Gamestage extends PApplet{
 		
 		myAnimation.play();
 		mn = new Minim(this);
-		correct = mn.loadFile(this.getClass().getResource("res/correct.mp3").getPath());
-		wrong = mn.loadFile(this.getClass().getResource("res/wrong.mp3").getPath());
+		correct = mn.loadFile(this.getClass().getResource("/res/correct.mp3").getPath());
+		wrong = mn.loadFile(this.getClass().getResource("/res/wrong.mp3").getPath());
+		musicMenu = mn.loadFile(this.getClass().getResource("/res/bg-00.mp3").getPath());
+		musicStart = mn.loadFile(this.getClass().getResource("/res/bg-01.mp3").getPath());
+		musicJohn = mn.loadFile(this.getClass().getResource("/res/bg-02.mp3").getPath());
 	}
 	
 	public void draw(){
@@ -151,6 +157,9 @@ public class Gamestage extends PApplet{
 			//reset in-game data
 			score = 0;
 			lives = 5;
+			if(!musicMenu.isPlaying()){
+				musicMenu.play();
+			}
 		}else if(state == STATE.START){
 			//detect remain lives
 			if(lives <= 0){
@@ -215,6 +224,9 @@ public class Gamestage extends PApplet{
 				setAnswer();
 				seqReset();
 			}
+			
+			if(!musicStart.isPlaying())
+				musicStart.play();
 		}else if(state == STATE.HELP){
 			cp5.setVisible(false);
 			help.display();
@@ -363,6 +375,8 @@ public class Gamestage extends PApplet{
 		if(state == STATE.MENU){
 			state = STATE.START;
 			seqPhoto.start();
+			musicStart.play();
+			musicMenu.close();
 		}
 	}
 	
