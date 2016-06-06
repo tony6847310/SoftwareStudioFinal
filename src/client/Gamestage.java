@@ -51,11 +51,13 @@ public class Gamestage extends PApplet{
 	protected boolean hoverOverOption;
 	protected boolean pressed;
 	protected boolean clickedOption;
+	private Gif myAnimation;
 	
 	//PImage[] allFrames = Gif.getPImages(this, "res/bg.gif");
 	
 	public  void setup(){
 		size(windowWidth, windowHeight);
+		myAnimation = new Gif(this, "res/bg.gif");
 		//create objects
 		options = new ArrayList<Option>();
 		photos = new ArrayList<Photo>();
@@ -71,21 +73,11 @@ public class Gamestage extends PApplet{
 		caseLength = 8;
 		//load and set data
 		loadData();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
+
 		setAnswer();
-=======
-<<<<<<< HEAD
-		
-=======
->>>>>>> 26b4856ea215469444f11a5280453056af92659c
->>>>>>> 031ac5e63c10f87357b40833bf1026971303efb6
->>>>>>> e7dc6862d119caf91213469363061779dba192d8
-=======
+
 		setAnswer();
->>>>>>> 57deb05e7d7a4ab1a252210912f9b7f0473c7502
+
 		leftPhoto = photos.get(0);
 		rightPhoto = photos.get(1);
 		bg = loadImage("res/bg.jpg");
@@ -134,6 +126,8 @@ public class Gamestage extends PApplet{
 		//text align
 		textAlign(CENTER);
 		
+		myAnimation.play();
+		
 	}
 	
 	public void draw(){
@@ -144,7 +138,8 @@ public class Gamestage extends PApplet{
 			seqLabel.start();
 			fill(0, 0, 128);
 			textSize(70);
-			image(bg, windowWidth/4-50, 100, 750, 750);
+			//image(bg, windowWidth/4-50, 100, 750, 750);	
+			image(myAnimation,100,100);
 			image(title, 50, 0, 320, 300);
 			//text("Final : The Game", windowWidth/2, 120);
 			//reset in-game data
@@ -256,11 +251,10 @@ public class Gamestage extends PApplet{
 			p.resetPos();
 			photos.add(p);
 		}
-<<<<<<< HEAD
+
 		bg = loadImage("res/bg.jpg");
 		title = loadImage("res/title.png");
-=======
->>>>>>> e7dc6862d119caf91213469363061779dba192d8
+
 	}
 	
 	public void mousePressed(){
