@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="lib/Ani.jar"/>
 	<classpathentry kind="lib" path="lib/controlP5.jar"/>
 	<classpathentry kind="lib" path="lib/core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/final_project_software/lib/gifAnimation.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
