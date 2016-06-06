@@ -73,15 +73,7 @@ public class Gamestage extends PApplet{
 		caseLength = 8;
 		//load and set data
 		loadData();
-<<<<<<< HEAD
-
 		setAnswer();
-
-		setAnswer();
-
-=======
-		setAnswer();
->>>>>>> d12cbb9725ab45dcdf67f07722b4cd4f4d129390
 		leftPhoto = photos.get(0);
 		rightPhoto = photos.get(1);
 		bg = loadImage("res/bg.jpg");
@@ -243,14 +235,6 @@ public class Gamestage extends PApplet{
 			p.resetPos();
 			photos.add(p);
 		}
-<<<<<<< HEAD
-
-		bg = loadImage("res/bg.jpg");
-		title = loadImage("res/title.png");
-
-=======
-		
->>>>>>> d12cbb9725ab45dcdf67f07722b4cd4f4d129390
 	}
 	
 	public void mousePressed(){
