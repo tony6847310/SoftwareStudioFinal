@@ -23,6 +23,8 @@ public class Gamestage extends PApplet{
 	private int score;
 	private int lives;
 	private boolean newRound;
+	private int chosenOptionIndex;
+	private int answerIndex;
 	protected static float optionWidth = 120, optionHeight = 120;
 	protected static float optionAnchor_X = (windowWidth/4 - optionWidth)/2; 
 	protected static float optionAnchor_Y = windowHeight - optionHeight - 60;
@@ -62,11 +64,23 @@ public class Gamestage extends PApplet{
 		pause = false;
 		newRound = true;
 		hoverOverOption = false;
-		set = 1;
+		set = 2;
 		//load and set data
 		loadData();
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+		setAnswer();
+=======
+<<<<<<< HEAD
+		
+=======
+>>>>>>> 26b4856ea215469444f11a5280453056af92659c
+>>>>>>> 031ac5e63c10f87357b40833bf1026971303efb6
+>>>>>>> e7dc6862d119caf91213469363061779dba192d8
 		leftPhoto = photos.get(0);
 		rightPhoto = photos.get(1);
+		bg = loadImage("res/bg.jpg");
 		//cp5 settings
 		cp5 = new ControlP5(this);
 		PImage[] imgs1 = {loadImage("res/start_btn.png"),loadImage("res/start_hover.png"),loadImage("res/start_btn.png")};
@@ -149,6 +163,7 @@ public class Gamestage extends PApplet{
 				mouseX > o.getOriX() && mouseX < o.getOriX() + optionWidth){
 					hoverOverOption = true;
 					chosenOption = o;
+					chosenOptionIndex = i+1;
 					float x = chosenOption.getOriX() +10, y = chosenOption.getOriY()+10;
 					chosenOption.setCurPos(x, y);
 					break;
@@ -176,6 +191,10 @@ public class Gamestage extends PApplet{
 				}
 				clickedOption = false;
 				newRound = true;
+				//reload data, change set
+				set = 2;
+				loadData();
+				setAnswer();
 				seqPhoto.start();
 			}
 		}else if(state == STATE.HELP){
@@ -194,6 +213,7 @@ public class Gamestage extends PApplet{
 			int index = i+3;
 			Option o = new Option(this);
 			PImage pi = loadImage("case"+ set +"/0" + set +"-0"+ index +".png");
+			System.out.println("case"+ set +"/0" + set +"-0"+ index +".png");
 			o.setImage(pi);
 			o.setSize(optionWidth, optionHeight);
 			o.setOriPos(optionAnchor_X + optionGap * i, optionAnchor_Y);
@@ -213,8 +233,11 @@ public class Gamestage extends PApplet{
 			p.resetPos();
 			photos.add(p);
 		}
+<<<<<<< HEAD
 		bg = loadImage("res/bg.jpg");
 		title = loadImage("res/title.png");
+=======
+>>>>>>> e7dc6862d119caf91213469363061779dba192d8
 	}
 	
 	public void mousePressed(){
@@ -230,7 +253,9 @@ public class Gamestage extends PApplet{
 			if(hoverOverOption){
 				clickedOption = true;
 				if(newRound){
-					addScore();
+					if(chosenOptionIndex == answerIndex){
+						addScore();
+					}
 					newRound = false;
 				}
 			}
@@ -318,5 +343,12 @@ public class Gamestage extends PApplet{
 	//game-control methods
 	public void addScore(){
 		score++;
+	}
+	public void setAnswer(){
+		if(set == 1){
+			answerIndex = 1;
+		}else if(set == 2){
+			answerIndex = 2;
+		}
 	}
 }
