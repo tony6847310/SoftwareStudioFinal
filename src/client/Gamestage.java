@@ -1,3 +1,4 @@
+package client;
 import processing.core.PApplet;
 import processing.core.PImage;
 import controlP5.ControlP5;
@@ -12,7 +13,7 @@ public class Gamestage extends PApplet{
 	//declare resource objects
 	private ArrayList<Option> options;
 	private ArrayList<Photo> photos;
-	private Photo selectedPhotos;
+	private Photo leftPhoto, rightPhoto;
 	private Option chosenOption;
 	private Help help;
 	private PImage bg;
@@ -24,6 +25,9 @@ public class Gamestage extends PApplet{
 	protected static float optionAnchor_X = (windowWidth/4 - optionWidth)/2; 
 	protected static float optionAnchor_Y = windowHeight - optionHeight - 60;
 	protected static float optionGap=windowWidth/4;
+	protected static float photoWidth = 250, photoHeight = 250;
+	protected static float photoAnchor_X = 175, photoAnchor_Y= 150;
+	protected static float photoGap = 400;
 	//choose which set to show 
 	private int optionSet;
 	private int photoSet;
@@ -36,6 +40,8 @@ public class Gamestage extends PApplet{
 	private STATE state = STATE.MENU;
 	//animation control
 	AniSequence seqPhoto;
+	//condition tags
+	protected boolean pause;
 	protected boolean hoverOverOption;
 	protected boolean pressed;
 	protected boolean clickedOption;
@@ -49,14 +55,20 @@ public class Gamestage extends PApplet{
 		//other parameters
 		score = 0;
 		lives = 4;
+		pause = false;
 		newRound = true;
 		hoverOverOption = false;
 		optionSet = 0;
 		photoSet = 0;
 		//load and set data
 		loadData();
+<<<<<<< HEAD:src/Gamestage.java
 		selectedPhotos = photos.get(photoSet);
 		
+=======
+		leftPhoto = photos.get(0);
+		rightPhoto = photos.get(1);
+>>>>>>> d19500d7b41b2bdca8e134646553d3e5c5f86a04:src/client/Gamestage.java
 		//cp5 settings
 		cp5 = new ControlP5(this);
 		PImage[] imgs1 = {loadImage("res/start_btn.png"),loadImage("res/start_hover.png"),loadImage("res/start_btn.png")};
@@ -82,10 +94,12 @@ public class Gamestage extends PApplet{
 		seqPhoto = new AniSequence(this);
 		seqPhoto.beginSequence();
 			//step 0
-		seqPhoto.add(Ani.to(selectedPhotos, (float)1.5 , "photo_Y", Photo.photoAnchor_Y, Ani.QUART_OUT) );
+		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
 		seqPhoto.beginStep();
 			//step 1
-		seqPhoto.add(Ani.to(selectedPhotos, (float)1.5 , "photo_Y", 800, Ani.QUART_IN) );
+		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
 		seqPhoto.endStep();
 		seqPhoto.endSequence();
 		//text align
@@ -100,7 +114,6 @@ public class Gamestage extends PApplet{
 			fill(0, 0, 128);
 			textSize(70);
 			text("Final : The Game", windowWidth/2, 120);
-			seqPhoto.pause();
 			//reset in-game data
 			score = 0;
 			lives = 3;
@@ -133,8 +146,9 @@ public class Gamestage extends PApplet{
 				}
 			}
 			//show selected photo-set
-			photos.get(photoSet).display();
-			
+			for(int i=0; i<2 ;i++){
+				photos.get(i).display();
+			}
 			//draw option slots
 			fill(204, 230, 255);
 			stroke(153, 206, 255);
@@ -152,13 +166,10 @@ public class Gamestage extends PApplet{
 				clickedOption = false;
 				newRound = true;
 				seqPhoto.start();
-			}else if(!seqPhoto.isPlaying()){
-				seqPhoto.start();
 			}
 		}else if(state == STATE.HELP){
 			cp5.setVisible(false);
 			help.display();
-			seqPhoto.pause();
 		}else if(state == STATE.END){
 			//TO-DO
 		}
@@ -178,9 +189,16 @@ public class Gamestage extends PApplet{
 			options.add(o);
 		}
 		
-		for(int i=0 ; i<1; i++){
+		for(int i=0 ; i<2; i++){
 			//should modify file path later
+			//temporary, set option1 & option2 as photos
+			int index = i+1; 
 			Photo p = new Photo(this);
+			PImage pi = loadImage("res/option_" + index +".jpg");
+			p.setImage(pi);
+			p.setSize(photoWidth, photoHeight);
+			p.setOriPos(photoAnchor_X + photoGap * i, 800); //y -> below bottom of the window
+			p.resetPos();
 			photos.add(p);
 		}
 		bg = loadImage("res/bg.jpg");
@@ -219,14 +237,24 @@ public class Gamestage extends PApplet{
 				seqPhoto.start();
 			}else if(keyCode == KeyEvent.VK_BACK_SPACE){
 				state = STATE.MENU;
+			}else if(keyCode == KeyEvent.VK_P){
+				pause  = !pause;
+				if(pause){
+					seqPhoto.pause();
+				}else{
+					seqPhoto.resume();
+				}
 			}
+			
 		}else if(state == STATE.MENU){
 			if(keyCode == KeyEvent.VK_ENTER){
 				state = STATE.START;
+				seqPhoto.start();
 			}
 		}else if(state == STATE.HELP){
 			if(keyCode == KeyEvent.VK_ENTER){
 				state = STATE.START;
+				seqPhoto.start();
 			}else if(keyCode == KeyEvent.VK_ESCAPE){
 				this.exit();
 			}else if(keyCode == KeyEvent.VK_BACK_SPACE){
@@ -238,6 +266,7 @@ public class Gamestage extends PApplet{
 	public void startBtn(){
 		if(state == STATE.MENU){
 			state = STATE.START;
+			seqPhoto.start();
 		}
 	}
 	

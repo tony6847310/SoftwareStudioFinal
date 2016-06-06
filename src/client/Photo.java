@@ -1,23 +1,23 @@
+package client;
 import processing.core.PImage;
 
-public class Option {
+public class Photo {
 	private Gamestage parent;
-	private PImage img;
+	private PImage photoImg;
 	private float cur_X, cur_Y;
 	private float ori_X, ori_Y;
 	private float width, height;
 	
-	
-	public Option(Gamestage gs){
+	public Photo(Gamestage gs){
 		parent = gs;
 	}
 	
 	public void display(){
-		parent.image(img, cur_X, cur_Y, width, height);
+		parent.image(photoImg, cur_X, cur_Y, width, height);
 	}
 	
 	public void setImage(PImage pi){
-		img = pi;
+		photoImg = pi;
 	}
 	
 	public void setSize(float w, float h){
@@ -41,8 +41,8 @@ public class Option {
 	}
 	
 	public void resetSize(){
-		width = Gamestage.optionWidth;
-		height = Gamestage.optionHeight;
+		width = Gamestage.photoWidth;
+		height = Gamestage.photoHeight;
 	}
 	
 	public float getCurX(){
@@ -59,5 +59,8 @@ public class Option {
 	
 	public float getOriY(){
 		return ori_Y;
+	}
+	
+	public void hide(){
 	}
 }
