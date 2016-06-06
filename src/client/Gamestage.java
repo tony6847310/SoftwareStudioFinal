@@ -191,20 +191,7 @@ public class Gamestage extends PApplet{
 					set = 1;
 				loadData();
 				setAnswer();
-				leftPhoto = photos.get(0);
-				rightPhoto = photos.get(1);
-				seqPhoto = new AniSequence(this);
-				seqPhoto.beginSequence();
-				//step 0
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.beginStep();
-				//step 1
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.endStep();
-				seqPhoto.endSequence();
-				seqPhoto.start();
+				seqReset();
 			}
 		}else if(state == STATE.HELP){
 			cp5.setVisible(false);
@@ -296,41 +283,17 @@ public class Gamestage extends PApplet{
 			}else if(keyCode == KeyEvent.VK_1){
 				caseIndex = 1;
 				caseLength = 8;
+				set = 1;
 				loadData();
 				setAnswer();
-				leftPhoto = photos.get(0);
-				rightPhoto = photos.get(1);
-				seqPhoto = new AniSequence(this);
-				seqPhoto.beginSequence();
-				//step 0
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.beginStep();
-				//step 1
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.endStep();
-				seqPhoto.endSequence();
-				seqPhoto.start();
+				seqReset();
 			}else if(keyCode == KeyEvent.VK_2){
 				caseIndex = 2;
 				caseLength = 1;
+				set = 1;
 				loadData();
 				setAnswer();
-				leftPhoto = photos.get(0);
-				rightPhoto = photos.get(1);
-				seqPhoto = new AniSequence(this);
-				seqPhoto.beginSequence();
-				//step 0
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.beginStep();
-				//step 1
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.endStep();
-				seqPhoto.endSequence();
-				seqPhoto.start();
+				seqReset();
 			}else if(keyCode == KeyEvent.VK_3){
 				caseIndex = 3;
 			}
@@ -383,7 +346,20 @@ public class Gamestage extends PApplet{
 		}
 	}
 	//animations
-	public void seqEnd(){
+	public void seqReset(){
+		leftPhoto = photos.get(0);
+		rightPhoto = photos.get(1);
+		seqPhoto = new AniSequence(this);
+		seqPhoto.beginSequence();
+		//step 0
+		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		seqPhoto.beginStep();
+		//step 1
+		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+		seqPhoto.endStep();
+		seqPhoto.endSequence();
 		seqPhoto.start();
 	}
 	//game-control methods
