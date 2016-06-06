@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 import controlP5.ControlP5;
 import de.looksgood.ani.Ani;
 import de.looksgood.ani.AniSequence;
@@ -12,11 +13,16 @@ public class Gamestage extends PApplet{
 	private ArrayList<Option> options;
 	private ArrayList<Photo> photos;
 	private Photo selectedPhotos;
+	private Option chosenOption;
 	private Help help;
 	//in-game data
 	private int score;
 	private int lives;
 	private boolean newRound;
+	protected static float optionWidth = 120, optionHeight = 120;
+	protected static float optionAnchor_X = (windowWidth/4 - optionWidth)/2; 
+	protected static float optionAnchor_Y = windowHeight - optionHeight - 60;
+	protected static float optionGap=windowWidth/4;
 	//choose which set to show 
 	private int optionSet;
 	private int photoSet;
@@ -29,7 +35,6 @@ public class Gamestage extends PApplet{
 	private STATE state = STATE.MENU;
 	//animation control
 	AniSequence seqPhoto;
-	protected int chosenOption;
 	protected boolean hoverOverOption;
 	protected boolean pressed;
 	protected boolean clickedOption;
@@ -47,7 +52,6 @@ public class Gamestage extends PApplet{
 		hoverOverOption = false;
 		optionSet = 0;
 		photoSet = 0;
-		chosenOption = 0;
 		//load and set data
 		loadData();
 		selectedPhotos = photos.get(photoSet);
@@ -107,14 +111,17 @@ public class Gamestage extends PApplet{
 			text("Lives: " + lives, 100, 60);
 			//detect mouse pointing on options
 			for(int i=0 ; i<4 ;i++){
-				if(mouseY > Option.anchor_Y && mouseY < Option.anchor_Y+Option.optionHeight){
-					if(mouseX > (Option.anchor_X + Option.gap * i) && mouseX < (Option.anchor_X + Option.gap * i + Option.optionWidth)){
+				Option o = options.get(i);
+				if(mouseY >  o.getOriY() && mouseY < o.getOriY() + optionHeight){
+					if(mouseX > o.getOriX() && mouseX < o.getOriX() + optionWidth){
 						hoverOverOption = true;
-						chosenOption = i;
+						chosenOption = o;
+						float x = chosenOption.getOriX() +10, y = chosenOption.getOriY()+10;
+						chosenOption.setCurPos(x, y);
 						break;
 					}
 				} else {
-					hoverOverOption = false;
+					o.resetPos();
 				}
 			}
 			//show selected photo-set
@@ -126,7 +133,9 @@ public class Gamestage extends PApplet{
 			strokeWeight(3);
 			rect(0, windowHeight - 200, windowWidth, 200);
 			//show selected option-set
-			options.get(optionSet).display();
+			for(int i=0 ;i<4 ;i++){
+				options.get(i).display();
+			}
 			//start photo ani
 			if(seqPhoto.isEnded()){
 				if(!clickedOption){
@@ -148,9 +157,16 @@ public class Gamestage extends PApplet{
 	}
 	
 	private void loadData(){
-		for(int i=0 ; i<1 ;i++){
-			//should modify file path later
+		
+		for(int i=0 ; i<4 ;i++){
+			//temporary, set option4 ~ option7 as options
+			int index = i+4;
 			Option o = new Option(this);
+			PImage pi = loadImage("res/option_" + index +".jpg");
+			o.setImage(pi);
+			o.setSize(optionWidth, optionHeight);
+			o.setOriPos(optionAnchor_X + optionGap * i, optionAnchor_Y);
+			o.resetPos();
 			options.add(o);
 		}
 		
@@ -177,6 +193,13 @@ public class Gamestage extends PApplet{
 					addScore();
 					newRound = false;
 				}
+			}
+		}
+	}
+	
+	public void mouseDragged(){
+		if(state == STATE.START){
+			if(hoverOverOption){
 			}
 		}
 	}
