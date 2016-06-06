@@ -73,14 +73,19 @@ public class Gamestage extends PApplet{
 		caseLength = 8;
 		//load and set data
 		loadData();
+<<<<<<< HEAD
 
 		setAnswer();
 
 		setAnswer();
 
+=======
+		setAnswer();
+>>>>>>> d12cbb9725ab45dcdf67f07722b4cd4f4d129390
 		leftPhoto = photos.get(0);
 		rightPhoto = photos.get(1);
 		bg = loadImage("res/bg.jpg");
+		title = loadImage("res/title.png");
 		//cp5 settings
 		cp5 = new ControlP5(this);
 		PImage[] imgs1 = {loadImage("res/start_btn.png"),loadImage("res/start_hover.png"),loadImage("res/start_btn.png")};
@@ -199,20 +204,7 @@ public class Gamestage extends PApplet{
 					set = 1;
 				loadData();
 				setAnswer();
-				leftPhoto = photos.get(0);
-				rightPhoto = photos.get(1);
-				seqPhoto = new AniSequence(this);
-				seqPhoto.beginSequence();
-				//step 0
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.beginStep();
-				//step 1
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.endStep();
-				seqPhoto.endSequence();
-				seqPhoto.start();
+				seqReset();
 			}
 		}else if(state == STATE.HELP){
 			cp5.setVisible(false);
@@ -251,10 +243,14 @@ public class Gamestage extends PApplet{
 			p.resetPos();
 			photos.add(p);
 		}
+<<<<<<< HEAD
 
 		bg = loadImage("res/bg.jpg");
 		title = loadImage("res/title.png");
 
+=======
+		
+>>>>>>> d12cbb9725ab45dcdf67f07722b4cd4f4d129390
 	}
 	
 	public void mousePressed(){
@@ -307,41 +303,17 @@ public class Gamestage extends PApplet{
 			}else if(keyCode == KeyEvent.VK_1){
 				caseIndex = 1;
 				caseLength = 8;
+				set = 1;
 				loadData();
 				setAnswer();
-				leftPhoto = photos.get(0);
-				rightPhoto = photos.get(1);
-				seqPhoto = new AniSequence(this);
-				seqPhoto.beginSequence();
-				//step 0
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.beginStep();
-				//step 1
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.endStep();
-				seqPhoto.endSequence();
-				seqPhoto.start();
+				seqReset();
 			}else if(keyCode == KeyEvent.VK_2){
 				caseIndex = 2;
 				caseLength = 1;
+				set = 1;
 				loadData();
 				setAnswer();
-				leftPhoto = photos.get(0);
-				rightPhoto = photos.get(1);
-				seqPhoto = new AniSequence(this);
-				seqPhoto.beginSequence();
-				//step 0
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-				seqPhoto.beginStep();
-				//step 1
-				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
-				seqPhoto.endStep();
-				seqPhoto.endSequence();
-				seqPhoto.start();
+				seqReset();
 			}else if(keyCode == KeyEvent.VK_3){
 				caseIndex = 3;
 			}
@@ -394,7 +366,20 @@ public class Gamestage extends PApplet{
 		}
 	}
 	//animations
-	public void seqEnd(){
+	public void seqReset(){
+		leftPhoto = photos.get(0);
+		rightPhoto = photos.get(1);
+		seqPhoto = new AniSequence(this);
+		seqPhoto.beginSequence();
+		//step 0
+		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		seqPhoto.beginStep();
+		//step 1
+		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+		seqPhoto.endStep();
+		seqPhoto.endSequence();
 		seqPhoto.start();
 	}
 	//game-control methods
