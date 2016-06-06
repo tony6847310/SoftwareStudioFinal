@@ -29,11 +29,10 @@ public class Gamestage extends PApplet{
 	protected static float photoAnchor_X = (windowWidth/2 - photoWidth)/2, photoAnchor_Y = 150;
 	protected static float photoGap = windowWidth/2;
 	//choose which set to show 
-	private int optionSet;
-	private int photoSet;
+	private int set;
 	//other tools
 	private ControlP5 cp5;
-	//mouse interactions
+	//states
 	private enum STATE{
 		MENU, START, HELP, END, NAME
 	};
@@ -58,8 +57,7 @@ public class Gamestage extends PApplet{
 		pause = false;
 		newRound = true;
 		hoverOverOption = false;
-		optionSet = 0;
-		photoSet = 0;
+		set = 1;
 		//load and set data
 		loadData();
 		leftPhoto = photos.get(0);
@@ -172,9 +170,9 @@ public class Gamestage extends PApplet{
 		
 		for(int i=0 ; i<4 ;i++){
 			//temporary, set option4 ~ option7 as options
-			int index = i+4;
+			int index = i+3;
 			Option o = new Option(this);
-			PImage pi = loadImage("res/option_" + index +".jpg");
+			PImage pi = loadImage("case"+ set +"/0" + set +"-0"+ index +".png");
 			o.setImage(pi);
 			o.setSize(optionWidth, optionHeight);
 			o.setOriPos(optionAnchor_X + optionGap * i, optionAnchor_Y);
@@ -187,7 +185,7 @@ public class Gamestage extends PApplet{
 			//temporary, set option1 & option2 as photos
 			int index = i+1; 
 			Photo p = new Photo(this);
-			PImage pi = loadImage("res/option_" + index +".jpg");
+			PImage pi = loadImage("case" + set + "/0" + set + "-0" + index +".png");
 			p.setImage(pi);
 			p.setSize(photoWidth, photoHeight);
 			p.setOriPos(photoAnchor_X + photoGap * i, 800); //y -> below bottom of the window
