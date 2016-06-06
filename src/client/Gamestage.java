@@ -1,3 +1,4 @@
+package client;
 import processing.core.PApplet;
 import processing.core.PImage;
 import controlP5.ControlP5;

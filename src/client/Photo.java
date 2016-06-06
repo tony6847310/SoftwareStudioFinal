@@ -1,3 +1,4 @@
+package client;
 import processing.core.PImage;
 
 public class Photo {

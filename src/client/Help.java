@@ -1,3 +1,4 @@
+package client;
 
 public class Help {
 	private float windowWidth = MyWindow.windowWidth, windowHeight = MyWindow.windowHeight;
