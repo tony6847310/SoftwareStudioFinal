@@ -34,6 +34,8 @@ public class Gamestage extends PApplet{
 	protected static float photoGap = windowWidth/2;
 	//choose which set to show 
 	private int set;
+	private int caseIndex;
+	private int caseLength;
 	//other tools
 	private ControlP5 cp5;
 	//states
@@ -64,17 +66,12 @@ public class Gamestage extends PApplet{
 		pause = false;
 		newRound = true;
 		hoverOverOption = false;
-		set = 2;
+		set = 1;
+		caseIndex = 1;
+		caseLength = 8;
 		//load and set data
 		loadData();
-<<<<<<< HEAD
 		setAnswer();
-=======
-<<<<<<< HEAD
-		
-=======
->>>>>>> 26b4856ea215469444f11a5280453056af92659c
->>>>>>> 031ac5e63c10f87357b40833bf1026971303efb6
 		leftPhoto = photos.get(0);
 		rightPhoto = photos.get(1);
 		bg = loadImage("res/bg.jpg");
@@ -101,26 +98,25 @@ public class Gamestage extends PApplet{
 		Ani.init(this);
 		seqPhoto = new AniSequence(this);
 		seqPhoto.beginSequence();
-		seqLabel = new AniSequence(this);
-		seqLabel.beginSequence();
-			//step 0
+		//step 0
 		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
 		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
 		seqPhoto.beginStep();
-		
-		seqLabel.add(Ani.to(cp5, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-		//seqLabel.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
-		seqLabel.beginStep();		
-			//step 1
+		//step 1
 		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
 		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
 		seqPhoto.endStep();
 		seqPhoto.endSequence();
 		
+		seqLabel = new AniSequence(this);
+		seqLabel.beginSequence();
+		seqLabel.add(Ani.to(cp5, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		//seqLabel.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		seqLabel.beginStep();		
 		//seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
 		seqLabel.add(Ani.to(cp5, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
 		seqLabel.endStep();
-		seqLabel.endSequence();		
+		seqLabel.endSequence();
 		//text align
 		textAlign(CENTER);
 		
@@ -138,7 +134,7 @@ public class Gamestage extends PApplet{
 			//text("Final : The Game", windowWidth/2, 120);
 			//reset in-game data
 			score = 0;
-			lives = 3;
+			lives = 1000000;
 		}else if(state == STATE.START){
 			//detect remain lives
 			if(lives <= 0){
@@ -188,9 +184,24 @@ public class Gamestage extends PApplet{
 				clickedOption = false;
 				newRound = true;
 				//reload data, change set
-				set = 2;
+				set++;
+				if(set > caseLength)
+					set = 1;
 				loadData();
 				setAnswer();
+				leftPhoto = photos.get(0);
+				rightPhoto = photos.get(1);
+				seqPhoto = new AniSequence(this);
+				seqPhoto.beginSequence();
+				//step 0
+				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+				seqPhoto.beginStep();
+				//step 1
+				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+				seqPhoto.endStep();
+				seqPhoto.endSequence();
 				seqPhoto.start();
 			}
 		}else if(state == STATE.HELP){
@@ -203,13 +214,14 @@ public class Gamestage extends PApplet{
 	}
 	
 	private void loadData(){
+		options.clear();
+		photos.clear();
 		
 		for(int i=0 ; i<4 ;i++){
 			//temporary, set option4 ~ option7 as options
 			int index = i+3;
 			Option o = new Option(this);
-			PImage pi = loadImage("case"+ set +"/0" + set +"-0"+ index +".png");
-			System.out.println("case"+ set +"/0" + set +"-0"+ index +".png");
+			PImage pi = loadImage("case"+ caseIndex +"/0" + set +"-0"+ index +".png");
 			o.setImage(pi);
 			o.setSize(optionWidth, optionHeight);
 			o.setOriPos(optionAnchor_X + optionGap * i, optionAnchor_Y);
@@ -222,7 +234,7 @@ public class Gamestage extends PApplet{
 			//temporary, set option1 & option2 as photos
 			int index = i+1; 
 			Photo p = new Photo(this);
-			PImage pi = loadImage("case" + set + "/0" + set + "-0" + index +".png");
+			PImage pi = loadImage("case" + caseIndex + "/0" + set + "-0" + index +".png");
 			p.setImage(pi);
 			p.setSize(photoWidth, photoHeight);
 			p.setOriPos(photoAnchor_X + photoGap * i, 800); //y -> below bottom of the window
@@ -278,6 +290,46 @@ public class Gamestage extends PApplet{
 			if(keyCode == KeyEvent.VK_ENTER){
 				state = STATE.START;
 				seqPhoto.start();
+			}else if(keyCode == KeyEvent.VK_1){
+				caseIndex = 1;
+				caseLength = 8;
+				loadData();
+				setAnswer();
+				leftPhoto = photos.get(0);
+				rightPhoto = photos.get(1);
+				seqPhoto = new AniSequence(this);
+				seqPhoto.beginSequence();
+				//step 0
+				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+				seqPhoto.beginStep();
+				//step 1
+				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+				seqPhoto.endStep();
+				seqPhoto.endSequence();
+				seqPhoto.start();
+			}else if(keyCode == KeyEvent.VK_2){
+				caseIndex = 2;
+				caseLength = 1;
+				loadData();
+				setAnswer();
+				leftPhoto = photos.get(0);
+				rightPhoto = photos.get(1);
+				seqPhoto = new AniSequence(this);
+				seqPhoto.beginSequence();
+				//step 0
+				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+				seqPhoto.beginStep();
+				//step 1
+				seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+				seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+				seqPhoto.endStep();
+				seqPhoto.endSequence();
+				seqPhoto.start();
+			}else if(keyCode == KeyEvent.VK_3){
+				caseIndex = 3;
 			}
 		}else if(state == STATE.HELP){
 			if(keyCode == KeyEvent.VK_ENTER){
@@ -336,10 +388,25 @@ public class Gamestage extends PApplet{
 		score++;
 	}
 	public void setAnswer(){
-		if(set == 1){
-			answerIndex = 1;
-		}else if(set == 2){
-			answerIndex = 2;
+		if(caseIndex == 1){
+			if(set == 1)
+				answerIndex = 2;
+			else if(set == 2)
+				answerIndex = 4;
+			else if(set == 3)
+				answerIndex = 1;
+			else if(set == 4)
+				answerIndex = 1;
+			else if(set == 5)
+				answerIndex = 4;
+			else if(set == 6)
+				answerIndex = 1;
+			else if(set == 7)
+				answerIndex = 4;
+			else if(set == 8)
+				answerIndex = 2;
+		}else if(caseIndex == 2){
+			answerIndex = 3;
 		}
 	}
 }
