@@ -12,7 +12,7 @@ public class Gamestage extends PApplet{
 	//declare resource objects
 	private ArrayList<Option> options;
 	private ArrayList<Photo> photos;
-	private Photo selectedPhotos;
+	private Photo leftPhoto, rightPhoto;
 	private Option chosenOption;
 	private Help help;
 	//in-game data
@@ -23,6 +23,9 @@ public class Gamestage extends PApplet{
 	protected static float optionAnchor_X = (windowWidth/4 - optionWidth)/2; 
 	protected static float optionAnchor_Y = windowHeight - optionHeight - 60;
 	protected static float optionGap=windowWidth/4;
+	protected static float photoWidth = 250, photoHeight = 250;
+	protected static float photoAnchor_X = 175, photoAnchor_Y= 150;
+	protected static float photoGap = 400;
 	//choose which set to show 
 	private int optionSet;
 	private int photoSet;
@@ -54,7 +57,8 @@ public class Gamestage extends PApplet{
 		photoSet = 0;
 		//load and set data
 		loadData();
-		selectedPhotos = photos.get(photoSet);
+		leftPhoto = photos.get(0);
+		rightPhoto = photos.get(1);
 		//cp5 settings
 		cp5 = new ControlP5(this);
 		cp5.addButton("startBtn")
@@ -74,10 +78,12 @@ public class Gamestage extends PApplet{
 		seqPhoto = new AniSequence(this);
 		seqPhoto.beginSequence();
 			//step 0
-		seqPhoto.add(Ani.to(selectedPhotos, (float)1.5 , "photo_Y", Photo.photoAnchor_Y, Ani.QUART_OUT) );
+		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
 		seqPhoto.beginStep();
 			//step 1
-		seqPhoto.add(Ani.to(selectedPhotos, (float)1.5 , "photo_Y", 800, Ani.QUART_IN) );
+		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
 		seqPhoto.endStep();
 		seqPhoto.endSequence();
 		//text align
@@ -125,8 +131,9 @@ public class Gamestage extends PApplet{
 				}
 			}
 			//show selected photo-set
-			photos.get(photoSet).display();
-			
+			for(int i=0; i<2 ;i++){
+				photos.get(i).display();
+			}
 			//draw option slots
 			fill(204, 230, 255);
 			stroke(153, 206, 255);
@@ -170,9 +177,16 @@ public class Gamestage extends PApplet{
 			options.add(o);
 		}
 		
-		for(int i=0 ; i<1; i++){
+		for(int i=0 ; i<2; i++){
 			//should modify file path later
+			//temporary, set option1 & option2 as photos
+			int index = i+1; 
 			Photo p = new Photo(this);
+			PImage pi = loadImage("res/option_" + index +".jpg");
+			p.setImage(pi);
+			p.setSize(photoWidth, photoHeight);
+			p.setOriPos(photoAnchor_X + photoGap * i, 800); //y -> below bottom of the window
+			p.resetPos();
 			photos.add(p);
 		}
 	}
