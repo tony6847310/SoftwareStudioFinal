@@ -24,10 +24,10 @@ public class Gamestage extends PApplet{
 	protected static float optionWidth = 120, optionHeight = 120;
 	protected static float optionAnchor_X = (windowWidth/4 - optionWidth)/2; 
 	protected static float optionAnchor_Y = windowHeight - optionHeight - 60;
-	protected static float optionGap=windowWidth/4;
-	protected static float photoWidth = 250, photoHeight = 250;
-	protected static float photoAnchor_X = 175, photoAnchor_Y= 150;
-	protected static float photoGap = 400;
+	protected static float optionGap = windowWidth/4;
+	protected static float photoWidth = 220, photoHeight = 220;
+	protected static float photoAnchor_X = (windowWidth/2 - photoWidth)/2, photoAnchor_Y = 150;
+	protected static float photoGap = windowWidth/2;
 	//choose which set to show 
 	private int optionSet;
 	private int photoSet;
@@ -35,7 +35,7 @@ public class Gamestage extends PApplet{
 	private ControlP5 cp5;
 	//mouse interactions
 	private enum STATE{
-		MENU, START, HELP, END
+		MENU, START, HELP, END, NAME
 	};
 	private STATE state = STATE.MENU;
 	//animation control
@@ -83,7 +83,6 @@ public class Gamestage extends PApplet{
 			.setPosition(windowWidth/2 - 100, windowHeight * 3/4)
 			.setImages(imgs3)
 			.setSize(160, 80);
-		
 		//animation settings
 		Ani.init(this);
 		seqPhoto = new AniSequence(this);
@@ -239,7 +238,6 @@ public class Gamestage extends PApplet{
 					seqPhoto.resume();
 				}
 			}
-			
 		}else if(state == STATE.MENU){
 			if(keyCode == KeyEvent.VK_ENTER){
 				state = STATE.START;
@@ -256,6 +254,25 @@ public class Gamestage extends PApplet{
 			}
 		}
 	}
+	//input username
+	/*public class Username extends PApplet{
+		private ControlP5 cp5;
+		public void setup(){
+			size(200, 120);
+			cp5 = new ControlP5(this);
+			cp5.addTextfield("Name")
+				.setPosition(100, 20)
+				.setSize(150, 50)
+				.setAutoClear(false);
+			cp5.addBang("Submit")
+				.setPosition(100, 100)
+				.setSize(75,30);
+			textAlign(CENTER);
+		}
+		public void draw(){
+			//
+		}
+	}*/
 	//ControlP5 buttons
 	public void startBtn(){
 		if(state == STATE.MENU){
