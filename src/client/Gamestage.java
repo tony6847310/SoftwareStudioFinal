@@ -1,4 +1,6 @@
+package client;
 import processing.core.PApplet;
+import processing.core.PImage;
 import controlP5.ControlP5;
 import de.looksgood.ani.Ani;
 import de.looksgood.ani.AniSequence;
@@ -11,12 +13,21 @@ public class Gamestage extends PApplet{
 	//declare resource objects
 	private ArrayList<Option> options;
 	private ArrayList<Photo> photos;
-	private Photo selectedPhotos;
+	private Photo leftPhoto, rightPhoto;
+	private Option chosenOption;
 	private Help help;
+	private PImage bg;
 	//in-game data
 	private int score;
 	private int lives;
 	private boolean newRound;
+	protected static float optionWidth = 120, optionHeight = 120;
+	protected static float optionAnchor_X = (windowWidth/4 - optionWidth)/2; 
+	protected static float optionAnchor_Y = windowHeight - optionHeight - 60;
+	protected static float optionGap=windowWidth/4;
+	protected static float photoWidth = 250, photoHeight = 250;
+	protected static float photoAnchor_X = 175, photoAnchor_Y= 150;
+	protected static float photoGap = 400;
 	//choose which set to show 
 	private int optionSet;
 	private int photoSet;
@@ -29,7 +40,8 @@ public class Gamestage extends PApplet{
 	private STATE state = STATE.MENU;
 	//animation control
 	AniSequence seqPhoto;
-	protected int chosenOption;
+	//condition tags
+	protected boolean pause;
 	protected boolean hoverOverOption;
 	protected boolean pressed;
 	protected boolean clickedOption;
@@ -43,37 +55,46 @@ public class Gamestage extends PApplet{
 		//other parameters
 		score = 0;
 		lives = 4;
+		pause = false;
 		newRound = true;
 		hoverOverOption = false;
 		optionSet = 0;
 		photoSet = 0;
-		chosenOption = 0;
 		//load and set data
 		loadData();
-		selectedPhotos = photos.get(photoSet);
+		leftPhoto = photos.get(0);
+		rightPhoto = photos.get(1);
 		//cp5 settings
 		cp5 = new ControlP5(this);
+		PImage[] imgs1 = {loadImage("res/start_btn.png"),loadImage("res/start_hover.png"),loadImage("res/start_btn.png")};
 		cp5.addButton("startBtn")
-			.setLabel("Start")
 			.setPosition(windowWidth/2 - 100, windowHeight * 1/4)
-			.setSize(160, 80);
+			.setImages(imgs1)
+			.setSize(160, 80)
+			;
+		PImage[] imgs2 = {loadImage("res/help_btn.png"),loadImage("res/help_hover.png"),loadImage("res/start_btn.png")};
 		cp5.addButton("helpBtn")
-			.setLabel("Help")
 			.setPosition(windowWidth/2 - 100, windowHeight * 2/4)
-			.setSize(160, 80);
+			.setImages(imgs2)
+			.setSize(160, 80)
+			;
+		PImage[] imgs3 = {loadImage("res/exit_btn.png"),loadImage("res/exit_hover.png"),loadImage("res/start_btn.png")};
 		cp5.addButton("quitBtn")
-			.setLabel("Quit")
 			.setPosition(windowWidth/2 - 100, windowHeight * 3/4)
+			.setImages(imgs3)
 			.setSize(160, 80);
+		
 		//animation settings
 		Ani.init(this);
 		seqPhoto = new AniSequence(this);
 		seqPhoto.beginSequence();
 			//step 0
-		seqPhoto.add(Ani.to(selectedPhotos, (float)1.5 , "photo_Y", Photo.photoAnchor_Y, Ani.QUART_OUT) );
+		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
+		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", photoAnchor_Y, Ani.QUART_OUT) );
 		seqPhoto.beginStep();
 			//step 1
-		seqPhoto.add(Ani.to(selectedPhotos, (float)1.5 , "photo_Y", 800, Ani.QUART_IN) );
+		seqPhoto.add(Ani.to(leftPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
+		seqPhoto.add(Ani.to(rightPhoto, (float)1.5 , "cur_Y", 800, Ani.QUART_IN) );
 		seqPhoto.endStep();
 		seqPhoto.endSequence();
 		//text align
@@ -82,13 +103,12 @@ public class Gamestage extends PApplet{
 	
 	public void draw(){
 		//set background color
-		background(255, 255, 153);
+		background(bg);
 		if(state == STATE.MENU){
 			cp5.setVisible(true);
 			fill(0, 0, 128);
 			textSize(70);
 			text("Final : The Game", windowWidth/2, 120);
-			seqPhoto.pause();
 			//reset in-game data
 			score = 0;
 			lives = 3;
@@ -107,26 +127,31 @@ public class Gamestage extends PApplet{
 			text("Lives: " + lives, 100, 60);
 			//detect mouse pointing on options
 			for(int i=0 ; i<4 ;i++){
-				if(mouseY > Option.anchor_Y && mouseY < Option.anchor_Y+Option.optionHeight){
-					if(mouseX > (Option.anchor_X + Option.gap * i) && mouseX < (Option.anchor_X + Option.gap * i + Option.optionWidth)){
-						hoverOverOption = true;
-						chosenOption = i;
-						break;
-					}
+				Option o = options.get(i);
+				if(mouseY >  o.getOriY() && mouseY < o.getOriY() + optionHeight && 
+				mouseX > o.getOriX() && mouseX < o.getOriX() + optionWidth){
+					hoverOverOption = true;
+					chosenOption = o;
+					float x = chosenOption.getOriX() +10, y = chosenOption.getOriY()+10;
+					chosenOption.setCurPos(x, y);
+					break;
 				} else {
-					hoverOverOption = false;
+					o.resetPos();
 				}
 			}
 			//show selected photo-set
-			photos.get(photoSet).display();
-			
+			for(int i=0; i<2 ;i++){
+				photos.get(i).display();
+			}
 			//draw option slots
 			fill(204, 230, 255);
 			stroke(153, 206, 255);
 			strokeWeight(3);
 			rect(0, windowHeight - 200, windowWidth, 200);
 			//show selected option-set
-			options.get(optionSet).display();
+			for(int i=0 ;i<4 ;i++){
+				options.get(i).display();
+			}
 			//start photo ani
 			if(seqPhoto.isEnded()){
 				if(!clickedOption){
@@ -135,30 +160,42 @@ public class Gamestage extends PApplet{
 				clickedOption = false;
 				newRound = true;
 				seqPhoto.start();
-			}else if(!seqPhoto.isPlaying()){
-				seqPhoto.start();
 			}
 		}else if(state == STATE.HELP){
 			cp5.setVisible(false);
 			help.display();
-			seqPhoto.pause();
 		}else if(state == STATE.END){
 			//TO-DO
 		}
 	}
 	
 	private void loadData(){
-		for(int i=0 ; i<1 ;i++){
-			//should modify file path later
+		
+		for(int i=0 ; i<4 ;i++){
+			//temporary, set option4 ~ option7 as options
+			int index = i+4;
 			Option o = new Option(this);
+			PImage pi = loadImage("res/option_" + index +".jpg");
+			o.setImage(pi);
+			o.setSize(optionWidth, optionHeight);
+			o.setOriPos(optionAnchor_X + optionGap * i, optionAnchor_Y);
+			o.resetPos();
 			options.add(o);
 		}
 		
-		for(int i=0 ; i<1; i++){
+		for(int i=0 ; i<2; i++){
 			//should modify file path later
+			//temporary, set option1 & option2 as photos
+			int index = i+1; 
 			Photo p = new Photo(this);
+			PImage pi = loadImage("res/option_" + index +".jpg");
+			p.setImage(pi);
+			p.setSize(photoWidth, photoHeight);
+			p.setOriPos(photoAnchor_X + photoGap * i, 800); //y -> below bottom of the window
+			p.resetPos();
 			photos.add(p);
 		}
+		bg = loadImage("res/bg.jpg");
 	}
 	
 	public void mousePressed(){
@@ -181,20 +218,37 @@ public class Gamestage extends PApplet{
 		}
 	}
 	
+	public void mouseDragged(){
+		if(state == STATE.START){
+			if(hoverOverOption){
+			}
+		}
+	}
+	
 	public void keyPressed(){
 		if(state == STATE.START){
 			if(keyCode == KeyEvent.VK_SPACE){
 				seqPhoto.start();
 			}else if(keyCode == KeyEvent.VK_BACK_SPACE){
 				state = STATE.MENU;
+			}else if(keyCode == KeyEvent.VK_P){
+				pause  = !pause;
+				if(pause){
+					seqPhoto.pause();
+				}else{
+					seqPhoto.resume();
+				}
 			}
+			
 		}else if(state == STATE.MENU){
 			if(keyCode == KeyEvent.VK_ENTER){
 				state = STATE.START;
+				seqPhoto.start();
 			}
 		}else if(state == STATE.HELP){
 			if(keyCode == KeyEvent.VK_ENTER){
 				state = STATE.START;
+				seqPhoto.start();
 			}else if(keyCode == KeyEvent.VK_ESCAPE){
 				this.exit();
 			}else if(keyCode == KeyEvent.VK_BACK_SPACE){
@@ -206,6 +260,7 @@ public class Gamestage extends PApplet{
 	public void startBtn(){
 		if(state == STATE.MENU){
 			state = STATE.START;
+			seqPhoto.start();
 		}
 	}
 	
