@@ -71,24 +71,11 @@ public class Gamestage extends PApplet{
 		caseLength = 8;
 		//load and set data
 		loadData();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 		setAnswer();
-=======
-<<<<<<< HEAD
-		
-=======
->>>>>>> 26b4856ea215469444f11a5280453056af92659c
->>>>>>> 031ac5e63c10f87357b40833bf1026971303efb6
->>>>>>> e7dc6862d119caf91213469363061779dba192d8
-=======
-		setAnswer();
->>>>>>> 57deb05e7d7a4ab1a252210912f9b7f0473c7502
 		leftPhoto = photos.get(0);
 		rightPhoto = photos.get(1);
 		bg = loadImage("res/bg.jpg");
+		title = loadImage("res/title.png");
 		//cp5 settings
 		cp5 = new ControlP5(this);
 		PImage[] imgs1 = {loadImage("res/start_btn.png"),loadImage("res/start_hover.png"),loadImage("res/start_btn.png")};
@@ -256,11 +243,7 @@ public class Gamestage extends PApplet{
 			p.resetPos();
 			photos.add(p);
 		}
-<<<<<<< HEAD
-		bg = loadImage("res/bg.jpg");
-		title = loadImage("res/title.png");
-=======
->>>>>>> e7dc6862d119caf91213469363061779dba192d8
+		
 	}
 	
 	public void mousePressed(){
