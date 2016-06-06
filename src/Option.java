@@ -1,49 +1,63 @@
-import java.util.ArrayList;
 import processing.core.PImage;
 
 public class Option {
-	private static int windowWidth = MyWindow.windowWidth, windowHeight = MyWindow.windowHeight;
-	private ArrayList<PImage> imgs;
 	private Gamestage parent;
-	protected static float optionWidth, optionHeight;
-	protected static float anchor_X, anchor_Y;
-	protected static float gap;
+	private PImage img;
+	private float cur_X, cur_Y;
+	private float ori_X, ori_Y;
+	private float width, height;
+	
 	
 	public Option(Gamestage gs){
-		imgs = new ArrayList<PImage>();
 		parent = gs;
-		optionWidth = 120;
-		optionHeight = 120;
-		anchor_X = (windowWidth/4 - optionWidth)/2;
-		anchor_Y = windowHeight - optionHeight - 60;
-		gap = windowWidth/4;
-		
-		
-		for(int i=0 ; i<4 ;i++){
-			//temporary, set option4 ~ option7 as options
-			int index = i+4;
-			PImage pi = parent.loadImage("res/option_" + index +".jpg");
-			imgs.add(pi);
-		}
 	}
 	
 	public void display(){
-		int count = 0;
-		for(PImage i : imgs){
-			//if mouse hover over an option
-			if(parent.hoverOverOption && parent.chosenOption == count){
-				if(parent.pressed){
-					//mouse pressed on the option
-					parent.image(i, anchor_X + gap*count + 8, anchor_Y - 5, optionWidth, optionHeight);
-					
-				} else {
-					parent.image(i, anchor_X + gap*count + 15, anchor_Y - 15, optionWidth, optionHeight);
-				}
-				
-			}else{
-				parent.image(i, anchor_X + gap*count, anchor_Y, optionWidth, optionHeight);
-			}
-			count++;
-		}
+		parent.image(img, cur_X, cur_Y, width, height);
+	}
+	
+	public void setImage(PImage pi){
+		img = pi;
+	}
+	
+	public void setSize(float w, float h){
+		width = w;
+		height = h;
+	}
+	
+	public void setOriPos(float x, float y){
+		ori_X = x;
+		ori_Y = y;
+	}
+	
+	public void setCurPos(float x, float y){
+		cur_X = x;
+		cur_Y = y;
+	}
+	
+	public void resetPos(){
+		cur_X = ori_X;
+		cur_Y = ori_Y;
+	}
+	
+	public void resetSize(){
+		width = Gamestage.optionWidth;
+		height = Gamestage.optionHeight;
+	}
+	
+	public float getCurX(){
+		return cur_X;
+	}
+	
+	public float getCurY(){
+		return cur_Y;
+	}
+	
+	public float getOriX(){
+		return ori_X;
+	}
+	
+	public float getOriY(){
+		return ori_Y;
 	}
 }
