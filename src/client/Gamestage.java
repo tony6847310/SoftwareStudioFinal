@@ -26,18 +26,17 @@ public class Gamestage extends PApplet{
 	protected static float optionWidth = 120, optionHeight = 120;
 	protected static float optionAnchor_X = (windowWidth/4 - optionWidth)/2; 
 	protected static float optionAnchor_Y = windowHeight - optionHeight - 60;
-	protected static float optionGap=windowWidth/4;
-	protected static float photoWidth = 250, photoHeight = 250;
-	protected static float photoAnchor_X = 175, photoAnchor_Y= 150;
-	protected static float photoGap = 400;
+	protected static float optionGap = windowWidth/4;
+	protected static float photoWidth = 220, photoHeight = 220;
+	protected static float photoAnchor_X = (windowWidth/2 - photoWidth)/2, photoAnchor_Y = 150;
+	protected static float photoGap = windowWidth/2;
 	//choose which set to show 
-	private int optionSet;
-	private int photoSet;
+	private int set;
 	//other tools
 	private ControlP5 cp5;
-	//mouse interactions
+	//states
 	private enum STATE{
-		MENU, START, HELP, END
+		MENU, START, HELP, END, NAME
 	};
 	private STATE state = STATE.MENU;
 	//animation control
@@ -63,11 +62,13 @@ public class Gamestage extends PApplet{
 		pause = false;
 		newRound = true;
 		hoverOverOption = false;
-		optionSet = 0;
-		photoSet = 0;
+		set = 1;
 		//load and set data
 		loadData();
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 26b4856ea215469444f11a5280453056af92659c
 		leftPhoto = photos.get(0);
 		rightPhoto = photos.get(1);
 		//cp5 settings
@@ -89,7 +90,6 @@ public class Gamestage extends PApplet{
 			.setPosition(windowWidth/4 - 100, 150+windowHeight * 3/8)
 			.setImages(imgs3)
 			.setSize(160, 80);
-		
 		//animation settings
 		Ani.init(this);
 		seqPhoto = new AniSequence(this);
@@ -148,14 +148,13 @@ public class Gamestage extends PApplet{
 			//detect mouse pointing on options
 			for(int i=0 ; i<4 ;i++){
 				Option o = options.get(i);
-				if(mouseY >  o.getOriY() && mouseY < o.getOriY() + optionHeight){
-					if(mouseX > o.getOriX() && mouseX < o.getOriX() + optionWidth){
-						hoverOverOption = true;
-						chosenOption = o;
-						float x = chosenOption.getOriX() +10, y = chosenOption.getOriY()+10;
-						chosenOption.setCurPos(x, y);
-						break;
-					}
+				if(mouseY >  o.getOriY() && mouseY < o.getOriY() + optionHeight && 
+				mouseX > o.getOriX() && mouseX < o.getOriX() + optionWidth){
+					hoverOverOption = true;
+					chosenOption = o;
+					float x = chosenOption.getOriX() +10, y = chosenOption.getOriY()+10;
+					chosenOption.setCurPos(x, y);
+					break;
 				} else {
 					o.resetPos();
 				}
@@ -195,9 +194,9 @@ public class Gamestage extends PApplet{
 		
 		for(int i=0 ; i<4 ;i++){
 			//temporary, set option4 ~ option7 as options
-			int index = i+4;
+			int index = i+3;
 			Option o = new Option(this);
-			PImage pi = loadImage("res/option_" + index +".jpg");
+			PImage pi = loadImage("case"+ set +"/0" + set +"-0"+ index +".png");
 			o.setImage(pi);
 			o.setSize(optionWidth, optionHeight);
 			o.setOriPos(optionAnchor_X + optionGap * i, optionAnchor_Y);
@@ -210,7 +209,7 @@ public class Gamestage extends PApplet{
 			//temporary, set option1 & option2 as photos
 			int index = i+1; 
 			Photo p = new Photo(this);
-			PImage pi = loadImage("res/option_" + index +".jpg");
+			PImage pi = loadImage("case" + set + "/0" + set + "-0" + index +".png");
 			p.setImage(pi);
 			p.setSize(photoWidth, photoHeight);
 			p.setOriPos(photoAnchor_X + photoGap * i, 800); //y -> below bottom of the window
@@ -261,7 +260,6 @@ public class Gamestage extends PApplet{
 					seqPhoto.resume();
 				}
 			}
-			
 		}else if(state == STATE.MENU){
 			if(keyCode == KeyEvent.VK_ENTER){
 				state = STATE.START;
@@ -278,6 +276,25 @@ public class Gamestage extends PApplet{
 			}
 		}
 	}
+	//input username
+	/*public class Username extends PApplet{
+		private ControlP5 cp5;
+		public void setup(){
+			size(200, 120);
+			cp5 = new ControlP5(this);
+			cp5.addTextfield("Name")
+				.setPosition(100, 20)
+				.setSize(150, 50)
+				.setAutoClear(false);
+			cp5.addBang("Submit")
+				.setPosition(100, 100)
+				.setSize(75,30);
+			textAlign(CENTER);
+		}
+		public void draw(){
+			//
+		}
+	}*/
 	//ControlP5 buttons
 	public void startBtn(){
 		if(state == STATE.MENU){
