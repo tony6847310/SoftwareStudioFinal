@@ -18,7 +18,7 @@ public class Gamestage extends PApplet{
 	private Photo leftPhoto, rightPhoto;
 	private Option chosenOption;
 	private Help help;
-	private PImage bg;
+	private PImage bg, title;
 	//in-game data
 	private int score;
 	private int lives;
@@ -65,10 +65,6 @@ public class Gamestage extends PApplet{
 		set = 1;
 		//load and set data
 		loadData();
-<<<<<<< HEAD
-		
-=======
->>>>>>> 26b4856ea215469444f11a5280453056af92659c
 		leftPhoto = photos.get(0);
 		rightPhoto = photos.get(1);
 		//cp5 settings
@@ -128,6 +124,7 @@ public class Gamestage extends PApplet{
 			fill(0, 0, 128);
 			textSize(70);
 			image(bg, windowWidth/4-50, 100, 750, 750);
+			image(title, 50, 0, 320, 300);
 			//text("Final : The Game", windowWidth/2, 120);
 			//reset in-game data
 			score = 0;
@@ -217,6 +214,7 @@ public class Gamestage extends PApplet{
 			photos.add(p);
 		}
 		bg = loadImage("res/bg.jpg");
+		title = loadImage("res/title.png");
 	}
 	
 	public void mousePressed(){
