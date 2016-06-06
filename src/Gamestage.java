@@ -15,6 +15,7 @@ public class Gamestage extends PApplet{
 	private Photo selectedPhotos;
 	private Option chosenOption;
 	private Help help;
+	private PImage bg;
 	//in-game data
 	private int score;
 	private int lives;
@@ -55,20 +56,27 @@ public class Gamestage extends PApplet{
 		//load and set data
 		loadData();
 		selectedPhotos = photos.get(photoSet);
+		
 		//cp5 settings
 		cp5 = new ControlP5(this);
+		PImage[] imgs1 = {loadImage("res/start_btn.png"),loadImage("res/start_hover.png"),loadImage("res/start_btn.png")};
 		cp5.addButton("startBtn")
-			.setLabel("Start")
 			.setPosition(windowWidth/2 - 100, windowHeight * 1/4)
-			.setSize(160, 80);
+			.setImages(imgs1)
+			.setSize(160, 80)
+			;
+		PImage[] imgs2 = {loadImage("res/help_btn.png"),loadImage("res/help_hover.png"),loadImage("res/start_btn.png")};
 		cp5.addButton("helpBtn")
-			.setLabel("Help")
 			.setPosition(windowWidth/2 - 100, windowHeight * 2/4)
-			.setSize(160, 80);
+			.setImages(imgs2)
+			.setSize(160, 80)
+			;
+		PImage[] imgs3 = {loadImage("res/exit_btn.png"),loadImage("res/exit_hover.png"),loadImage("res/start_btn.png")};
 		cp5.addButton("quitBtn")
-			.setLabel("Quit")
 			.setPosition(windowWidth/2 - 100, windowHeight * 3/4)
+			.setImages(imgs3)
 			.setSize(160, 80);
+		
 		//animation settings
 		Ani.init(this);
 		seqPhoto = new AniSequence(this);
@@ -86,7 +94,7 @@ public class Gamestage extends PApplet{
 	
 	public void draw(){
 		//set background color
-		background(255, 255, 153);
+		background(bg);
 		if(state == STATE.MENU){
 			cp5.setVisible(true);
 			fill(0, 0, 128);
@@ -175,6 +183,7 @@ public class Gamestage extends PApplet{
 			Photo p = new Photo(this);
 			photos.add(p);
 		}
+		bg = loadImage("res/bg.jpg");
 	}
 	
 	public void mousePressed(){
