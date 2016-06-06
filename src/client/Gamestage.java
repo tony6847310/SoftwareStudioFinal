@@ -62,13 +62,8 @@ public class Gamestage extends PApplet{
 		photoSet = 0;
 		//load and set data
 		loadData();
-<<<<<<< HEAD:src/Gamestage.java
-		selectedPhotos = photos.get(photoSet);
-		
-=======
 		leftPhoto = photos.get(0);
 		rightPhoto = photos.get(1);
->>>>>>> d19500d7b41b2bdca8e134646553d3e5c5f86a04:src/client/Gamestage.java
 		//cp5 settings
 		cp5 = new ControlP5(this);
 		PImage[] imgs1 = {loadImage("res/start_btn.png"),loadImage("res/start_hover.png"),loadImage("res/start_btn.png")};
@@ -133,14 +128,13 @@ public class Gamestage extends PApplet{
 			//detect mouse pointing on options
 			for(int i=0 ; i<4 ;i++){
 				Option o = options.get(i);
-				if(mouseY >  o.getOriY() && mouseY < o.getOriY() + optionHeight){
-					if(mouseX > o.getOriX() && mouseX < o.getOriX() + optionWidth){
-						hoverOverOption = true;
-						chosenOption = o;
-						float x = chosenOption.getOriX() +10, y = chosenOption.getOriY()+10;
-						chosenOption.setCurPos(x, y);
-						break;
-					}
+				if(mouseY >  o.getOriY() && mouseY < o.getOriY() + optionHeight && 
+				mouseX > o.getOriX() && mouseX < o.getOriX() + optionWidth){
+					hoverOverOption = true;
+					chosenOption = o;
+					float x = chosenOption.getOriX() +10, y = chosenOption.getOriY()+10;
+					chosenOption.setCurPos(x, y);
+					break;
 				} else {
 					o.resetPos();
 				}
