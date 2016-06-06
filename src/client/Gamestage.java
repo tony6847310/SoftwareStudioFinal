@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 
 import gifAnimation.*;
+import ddf.minim.*;;
 
 public class Gamestage extends PApplet{
 	private static int windowWidth = MyWindow.windowWidth, windowHeight = MyWindow.windowHeight;
@@ -25,6 +26,7 @@ public class Gamestage extends PApplet{
 	private boolean newRound;
 	private int chosenOptionIndex;
 	private int answerIndex;
+	private float secret_X, secret_Y;
 	protected static float optionWidth = 120, optionHeight = 120;
 	protected static float optionAnchor_X = (windowWidth/4 - optionWidth)/2; 
 	protected static float optionAnchor_Y = windowHeight - optionHeight - 60;
@@ -38,6 +40,9 @@ public class Gamestage extends PApplet{
 	private int caseLength;
 	//other tools
 	private ControlP5 cp5;
+	private Minim mn;
+	private AudioPlayer correct;
+	private AudioPlayer wrong;
 	//states
 	private enum STATE{
 		MENU, START, HELP, END, NAME
@@ -71,6 +76,8 @@ public class Gamestage extends PApplet{
 		set = 1;
 		caseIndex = 1;
 		caseLength = 8;
+		secret_X = windowWidth/2 - photoWidth/2;
+		secret_Y = 800;
 		//load and set data
 		loadData();
 		setAnswer();
@@ -124,7 +131,9 @@ public class Gamestage extends PApplet{
 		textAlign(CENTER);
 		
 		myAnimation.play();
-		
+		mn = new Minim(this);
+		correct = mn.loadFile(this.getClass().getResource("res/correct.mp3").getPath());
+		wrong = mn.loadFile(this.getClass().getResource("res/wrong.mp3").getPath());
 	}
 	
 	public void draw(){
@@ -141,11 +150,19 @@ public class Gamestage extends PApplet{
 			//text("Final : The Game", windowWidth/2, 120);
 			//reset in-game data
 			score = 0;
-			lives = 1000000;
+			lives = 5;
 		}else if(state == STATE.START){
 			//detect remain lives
 			if(lives <= 0){
-				state = STATE.MENU;
+				if(caseIndex == 3){
+					if(seqPhoto.isEnded()){
+						PImage secret = loadImage("case3/02-07.png");
+						Ani.to(this, (float)3.0, "secret_Y", windowHeight/2 - photoHeight);
+						state = STATE.MENU;
+					}
+				}else{
+					state = STATE.MENU;
+				}
 			}
 			//hide buttons after starting the game
 			cp5.setVisible(false);
@@ -253,6 +270,9 @@ public class Gamestage extends PApplet{
 					if(newRound){
 						if(chosenOptionIndex == answerIndex){
 							addScore();
+							correct.play();
+						}else{
+							wrong.play();
 						}
 						newRound = false;
 					}
