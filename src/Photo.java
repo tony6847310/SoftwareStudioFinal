@@ -59,4 +59,7 @@ public class Photo {
 	public float getOriY(){
 		return ori_Y;
 	}
+	
+	public void hide(){
+	}
 }

@@ -38,6 +38,8 @@ public class Gamestage extends PApplet{
 	private STATE state = STATE.MENU;
 	//animation control
 	AniSequence seqPhoto;
+	//condition tags
+	protected boolean pause;
 	protected boolean hoverOverOption;
 	protected boolean pressed;
 	protected boolean clickedOption;
@@ -51,6 +53,7 @@ public class Gamestage extends PApplet{
 		//other parameters
 		score = 0;
 		lives = 4;
+		pause = false;
 		newRound = true;
 		hoverOverOption = false;
 		optionSet = 0;
@@ -98,7 +101,6 @@ public class Gamestage extends PApplet{
 			fill(0, 0, 128);
 			textSize(70);
 			text("Final : The Game", windowWidth/2, 120);
-			seqPhoto.pause();
 			//reset in-game data
 			score = 0;
 			lives = 3;
@@ -151,13 +153,10 @@ public class Gamestage extends PApplet{
 				clickedOption = false;
 				newRound = true;
 				seqPhoto.start();
-			}else if(!seqPhoto.isPlaying()){
-				seqPhoto.start();
 			}
 		}else if(state == STATE.HELP){
 			cp5.setVisible(false);
 			help.display();
-			seqPhoto.pause();
 		}else if(state == STATE.END){
 			//TO-DO
 		}
@@ -224,14 +223,24 @@ public class Gamestage extends PApplet{
 				seqPhoto.start();
 			}else if(keyCode == KeyEvent.VK_BACK_SPACE){
 				state = STATE.MENU;
+			}else if(keyCode == KeyEvent.VK_P){
+				pause  = !pause;
+				if(pause){
+					seqPhoto.pause();
+				}else{
+					seqPhoto.resume();
+				}
 			}
+			
 		}else if(state == STATE.MENU){
 			if(keyCode == KeyEvent.VK_ENTER){
 				state = STATE.START;
+				seqPhoto.start();
 			}
 		}else if(state == STATE.HELP){
 			if(keyCode == KeyEvent.VK_ENTER){
 				state = STATE.START;
+				seqPhoto.start();
 			}else if(keyCode == KeyEvent.VK_ESCAPE){
 				this.exit();
 			}else if(keyCode == KeyEvent.VK_BACK_SPACE){
@@ -243,6 +252,7 @@ public class Gamestage extends PApplet{
 	public void startBtn(){
 		if(state == STATE.MENU){
 			state = STATE.START;
+			seqPhoto.start();
 		}
 	}
 	
