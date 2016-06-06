@@ -243,13 +243,15 @@ public class Gamestage extends PApplet{
 	
 	public void mouseClicked(){
 		if(state == STATE.START){
-			if(hoverOverOption){
-				clickedOption = true;
-				if(newRound){
-					if(chosenOptionIndex == answerIndex){
-						addScore();
+			if(!pause){
+				if(hoverOverOption){
+					clickedOption = true;
+					if(newRound){
+						if(chosenOptionIndex == answerIndex){
+							addScore();
+						}
+						newRound = false;
 					}
-					newRound = false;
 				}
 			}
 		}
@@ -296,6 +298,11 @@ public class Gamestage extends PApplet{
 				seqReset();
 			}else if(keyCode == KeyEvent.VK_3){
 				caseIndex = 3;
+				caseLength = 2;
+				set = 1;
+				loadData();
+				setAnswer();
+				seqReset();
 			}
 		}else if(state == STATE.HELP){
 			if(keyCode == KeyEvent.VK_ENTER){
@@ -386,6 +393,12 @@ public class Gamestage extends PApplet{
 				answerIndex = 2;
 		}else if(caseIndex == 2){
 			answerIndex = 3;
+		}else if(caseIndex == 3){
+			if(set == 1){
+				answerIndex = 4;
+			}else{
+				answerIndex = 7;
+			}
 		}
 	}
 }
