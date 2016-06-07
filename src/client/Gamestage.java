@@ -40,7 +40,7 @@ public class Gamestage extends PApplet{
 	private int caseLength;
 	//other tools
 	private ControlP5 cp5;
-	private Minim mn;
+	private Minim mnc, mnw, mn1;
 	private AudioPlayer correct;
 	private AudioPlayer wrong;
 	private AudioPlayer musicMenu;
@@ -134,12 +134,14 @@ public class Gamestage extends PApplet{
 		textAlign(CENTER);
 		
 		myAnimation.play();
-		mn = new Minim(this);
-		correct = mn.loadFile(this.getClass().getResource("/res/correct.mp3").getPath());
-		wrong = mn.loadFile(this.getClass().getResource("/res/wrong.mp3").getPath());
-		musicMenu = mn.loadFile(this.getClass().getResource("/res/bg-00.mp3").getPath());
-		musicStart = mn.loadFile(this.getClass().getResource("/res/bg-01.mp3").getPath());
-		musicJohn = mn.loadFile(this.getClass().getResource("/res/bg-02.mp3").getPath());
+		mnc = new Minim(this);
+		mnw = new Minim(this);
+		mn1 = new Minim(this);
+		correct = mnc.loadFile(this.getClass().getResource("/res/correct.mp3").getPath());
+		wrong = mnw.loadFile(this.getClass().getResource("/res/wrong.mp3").getPath());
+		musicMenu = mn1.loadFile(this.getClass().getResource("/res/bg-00.mp3").getPath());
+		musicStart = mn1.loadFile(this.getClass().getResource("/res/bg-01.mp3").getPath());
+		musicJohn = mn1.loadFile(this.getClass().getResource("/res/bg-02.mp3").getPath());
 	}
 	
 	public void draw(){
@@ -158,6 +160,7 @@ public class Gamestage extends PApplet{
 			score = 0;
 			lives = 5;
 			if(!musicMenu.isPlaying()){
+				//musicStart.close();
 				musicMenu.play();
 			}
 		}else if(state == STATE.START){
@@ -225,8 +228,9 @@ public class Gamestage extends PApplet{
 				seqReset();
 			}
 			
-			if(!musicStart.isPlaying())
+			if(!musicStart.isPlaying()){
 				musicStart.play();
+			}
 		}else if(state == STATE.HELP){
 			cp5.setVisible(false);
 			help.display();
@@ -278,15 +282,25 @@ public class Gamestage extends PApplet{
 		if(state == STATE.START){
 			if(!pause){
 				if(hoverOverOption){
-					clickedOption = true;
 					if(newRound){
 						if(chosenOptionIndex == answerIndex){
 							addScore();
-							correct.play();
+							correct.play(0);
+							clickedOption = true;
+							System.out.println("correct");
 						}else{
-							wrong.play();
+							wrong.play(0);
+							System.out.println("wrong");
 						}
 						newRound = false;
+					}else{
+						if(chosenOptionIndex == answerIndex){
+							correct.play(0);
+							System.out.println("correct");
+						}else{
+							wrong.play(0);
+							System.out.println("wrong");
+						}
 					}
 				}
 			}
@@ -306,6 +320,8 @@ public class Gamestage extends PApplet{
 				seqPhoto.start();
 			}else if(keyCode == KeyEvent.VK_BACK_SPACE){
 				state = STATE.MENU;
+				musicStart.pause();;
+				musicMenu.play();
 			}else if(keyCode == KeyEvent.VK_P){
 				pause  = !pause;
 				if(pause){
@@ -376,7 +392,7 @@ public class Gamestage extends PApplet{
 			state = STATE.START;
 			seqPhoto.start();
 			musicStart.play();
-			musicMenu.close();
+			musicMenu.pause();
 		}
 	}
 	
