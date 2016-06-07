@@ -20,6 +20,7 @@ public class Gamestage extends PApplet{
 	private Option chosenOption;
 	private Help help;
 	private PImage bg, title;
+	private PImage secret;
 	//in-game data
 	private int score;
 	private int lives;
@@ -48,7 +49,7 @@ public class Gamestage extends PApplet{
 	private AudioPlayer musicJohn;
 	//states
 	private enum STATE{
-		MENU, START, HELP, END, NAME
+		MENU, START, HELP, END, NAME, SECRET
 	};
 	private STATE state = STATE.MENU;
 	//animation control
@@ -79,7 +80,7 @@ public class Gamestage extends PApplet{
 		set = 1;
 		caseIndex = 1;
 		caseLength = 8;
-		secret_X = windowWidth/2 - photoWidth/2;
+		secret_X = windowWidth/2 - photoWidth;
 		secret_Y = 800;
 		//load and set data
 		loadData();
@@ -88,6 +89,7 @@ public class Gamestage extends PApplet{
 		rightPhoto = photos.get(1);
 		bg = loadImage("res/bg.jpg");
 		title = loadImage("res/title.png");
+		secret = loadImage("case3/02-07.png");
 		//cp5 settings
 		cp5 = new ControlP5(this);
 		PImage[] imgs1 = {loadImage("res/start_btn.png"),loadImage("res/start_hover.png"),loadImage("res/start_btn.png")};
@@ -141,7 +143,7 @@ public class Gamestage extends PApplet{
 		wrong = mnw.loadFile(this.getClass().getResource("/res/wrong.mp3").getPath());
 		musicMenu = mn1.loadFile(this.getClass().getResource("/res/bg-00.mp3").getPath());
 		musicStart = mn1.loadFile(this.getClass().getResource("/res/bg-01.mp3").getPath());
-		musicJohn = mn1.loadFile(this.getClass().getResource("/res/bg-02.mp3").getPath());
+		musicJohn = mn1.loadFile(this.getClass().getResource("/res/johncena.mp3").getPath());
 	}
 	
 	public void draw(){
@@ -158,7 +160,7 @@ public class Gamestage extends PApplet{
 			//text("Final : The Game", windowWidth/2, 120);
 			//reset in-game data
 			score = 0;
-			lives = 5;
+			lives = 1;
 			if(!musicMenu.isPlaying()){
 				//musicStart.close();
 				musicMenu.play();
@@ -168,12 +170,17 @@ public class Gamestage extends PApplet{
 			if(lives <= 0){
 				if(caseIndex == 3){
 					if(seqPhoto.isEnded()){
-						PImage secret = loadImage("case3/02-07.png");
-						Ani.to(this, (float)3.0, "secret_Y", windowHeight/2 - photoHeight);
-						state = STATE.MENU;
+						seqPhoto.pause();
+						musicStart.pause();
+						musicMenu.pause();
+						musicJohn.play(0);
+						Ani.to(this, (float)3.0, 1, "secret_Y", windowHeight/2 - photoHeight, Ani.EXPO_IN);
+						state = STATE.SECRET;
 					}
 				}else{
 					state = STATE.MENU;
+					musicStart.pause();
+					musicMenu.play(0);
 				}
 			}
 			//hide buttons after starting the game
@@ -220,22 +227,29 @@ public class Gamestage extends PApplet{
 				clickedOption = false;
 				newRound = true;
 				//reload data, change set
-				set++;
-				if(set > caseLength)
-					set = 1;
-				loadData();
-				setAnswer();
-				seqReset();
+				if(caseIndex == 3 && set == 2){
+					set = 2;
+				}else{
+					set++;
+					if(set > caseLength)
+						set = 1;
+					loadData();
+					setAnswer();
+					seqReset();
+				}
 			}
-			
-			if(!musicStart.isPlaying()){
-				musicStart.play();
+			if(caseIndex != 3){
+				if(!musicStart.isPlaying()){
+					musicStart.play(0);
+				}
 			}
 		}else if(state == STATE.HELP){
 			cp5.setVisible(false);
 			help.display();
 		}else if(state == STATE.END){
 			//TO-DO
+		}else if(state == STATE.SECRET){
+			image(secret, secret_X, secret_Y, photoWidth*2, photoHeight*2);
 		}
 		//image(myAnimation, 10,10);
 	}
@@ -357,6 +371,15 @@ public class Gamestage extends PApplet{
 				seqReset();
 			}
 		}else if(state == STATE.HELP){
+			if(keyCode == KeyEvent.VK_ENTER){
+				state = STATE.START;
+				seqPhoto.start();
+			}else if(keyCode == KeyEvent.VK_ESCAPE){
+				this.exit();
+			}else if(keyCode == KeyEvent.VK_BACK_SPACE){
+				state = STATE.MENU;
+			}
+		}else if(state == STATE.SECRET){
 			if(keyCode == KeyEvent.VK_ENTER){
 				state = STATE.START;
 				seqPhoto.start();
