@@ -5,6 +5,12 @@
 	<classpathentry kind="lib" path="lib/Ani.jar"/>
 	<classpathentry kind="lib" path="lib/controlP5.jar"/>
 	<classpathentry kind="lib" path="lib/core.jar"/>
-	<classpathentry kind="lib" path="C:/Users/user/Desktop/final_project_software/lib/gifAnimation.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/extrapixel-gif-animation-124fb80/extrapixel-gif-animation-124fb80/gifAnimation/library/gifAnimation.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/jar/jl1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/jar/jsminim.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/jar/minim.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/jar/mp3spi1.9.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/jar/tritonus_aos.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/jar/tritonus_share.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
