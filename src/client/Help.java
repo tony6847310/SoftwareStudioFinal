@@ -14,7 +14,7 @@ public class Help {
 	public void display(){
 		parent.fill(0, 0, 128);
 		parent.textSize(50);
-		parent.text("How to play", windowWidth/2, windowHeight * 1/4);
-		parent.image(inst, windowWidth/2 - 400, 200, 800, 600);
+		parent.text("How to play", windowWidth/2, 75);
+		parent.image(inst, windowWidth/2 - 400, 100, 800, 600);
 	}
 }
