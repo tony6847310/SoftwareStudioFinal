@@ -2,6 +2,7 @@ package client;
 import processing.core.PApplet;
 import processing.core.PImage;
 import controlP5.ControlP5;
+import controlP5.Textfield;
 import de.looksgood.ani.Ani;
 import de.looksgood.ani.AniSequence;
 
@@ -40,7 +41,7 @@ public class Gamestage extends PApplet{
 	private int caseIndex;
 	private int caseLength;
 	//other tools
-	private ControlP5 cp5;
+	private ControlP5 cp5, cp5_1, cp5_name;
 	private Minim mnc, mnw, mn1;
 	private AudioPlayer correct;
 	private AudioPlayer wrong;
@@ -49,7 +50,7 @@ public class Gamestage extends PApplet{
 	private AudioPlayer musicJohn;
 	//states
 	private enum STATE{
-		MENU, START, HELP, END, NAME, SECRET
+		MENU, START, HELP, END, NAME, SECRET, SCORE
 	};
 	private STATE state = STATE.MENU;
 	//animation control
@@ -61,7 +62,7 @@ public class Gamestage extends PApplet{
 	protected boolean pressed;
 	protected boolean clickedOption;
 	private Gif myAnimation;
-	
+	private LeaderBoard lb;
 	//PImage[] allFrames = Gif.getPImages(this, "res/bg.gif");
 	
 	public  void setup(){
@@ -90,6 +91,8 @@ public class Gamestage extends PApplet{
 		bg = loadImage("res/bg.jpg");
 		title = loadImage("res/title.png");
 		secret = loadImage("case3/02-07.png");
+		// load leaderboard
+		lb = new LeaderBoard(this);
 		//cp5 settings
 		cp5 = new ControlP5(this);
 		PImage[] imgs1 = {loadImage("res/start_btn.png"),loadImage("res/start_hover.png"),loadImage("res/start_btn.png")};
@@ -109,6 +112,24 @@ public class Gamestage extends PApplet{
 			.setPosition(windowWidth/4 - 100, 150+windowHeight * 3/8)
 			.setImages(imgs3)
 			.setSize(160, 80);
+		//cp5_1 settings
+		//cp5_1 = new ControlP5(this);
+		//cp5_name settings
+		cp5_name = new ControlP5(this);
+		PImage[] imgs4 = {loadImage("res/submit_btn.png"),loadImage("res/submit_hover.png"),loadImage("res/submit_btn.png")};
+		cp5_name.addTextfield("input name")
+				.setPosition(windowWidth/2, windowHeight/2)
+				.setSize(300, 60)
+				.setColor(color(255,0,0));
+		cp5_name.addButton("submit")
+				.setPosition(windowWidth/2, windowHeight/2+100)
+				.setImages(imgs4)
+				.setSize(160, 80);
+		/*cp5_name.addBang("submit")
+				.setPosition(windowWidth/2+50, windowHeight/2+100)
+				.setImages(imgs4)
+				.setSize(80, 40)
+				.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);*/
 		//animation settings
 		Ani.init(this);
 		seqPhoto = new AniSequence(this);
@@ -150,6 +171,7 @@ public class Gamestage extends PApplet{
 		//set background color
 		background(242, 196, 58);
 		if(state == STATE.MENU){
+			cp5_name.setVisible(false);
 			cp5.setVisible(true);
 			seqLabel.start();
 			fill(0, 0, 128);
@@ -160,7 +182,7 @@ public class Gamestage extends PApplet{
 			//text("Final : The Game", windowWidth/2, 120);
 			//reset in-game data
 			score = 0;
-			lives = 1;
+			lives = 3;
 			if(!musicMenu.isPlaying()){
 				//musicStart.close();
 				musicMenu.play();
@@ -178,13 +200,14 @@ public class Gamestage extends PApplet{
 						state = STATE.SECRET;
 					}
 				}else{
-					state = STATE.MENU;
+					state = STATE.END;
 					musicStart.pause();
 					musicMenu.play(0);
 				}
 			}
 			//hide buttons after starting the game
 			cp5.setVisible(false);
+			cp5_name.setVisible(false);
 			//display current score
 			fill(255, 128, 0);
 			textSize(30);
@@ -245,11 +268,15 @@ public class Gamestage extends PApplet{
 			}
 		}else if(state == STATE.HELP){
 			cp5.setVisible(false);
+			cp5_name.setVisible(false);
 			help.display();
 		}else if(state == STATE.END){
+			cp5_name.setVisible(true);
 			//TO-DO
 		}else if(state == STATE.SECRET){
 			image(secret, secret_X, secret_Y, photoWidth*2, photoHeight*2);
+		}else if(state == STATE.SCORE){
+			cp5_name.setVisible(false);
 		}
 		//image(myAnimation, 10,10);
 	}
@@ -301,19 +328,19 @@ public class Gamestage extends PApplet{
 							addScore();
 							correct.play(0);
 							clickedOption = true;
-							System.out.println("correct");
+							//System.out.println("correct");
 						}else{
 							wrong.play(0);
-							System.out.println("wrong");
+							//System.out.println("wrong");
 						}
 						newRound = false;
 					}else{
 						if(chosenOptionIndex == answerIndex){
 							correct.play(0);
-							System.out.println("correct");
+							//System.out.println("correct");
 						}else{
 							wrong.play(0);
-							System.out.println("wrong");
+							//System.out.println("wrong");
 						}
 					}
 				}
@@ -388,6 +415,14 @@ public class Gamestage extends PApplet{
 			}else if(keyCode == KeyEvent.VK_BACK_SPACE){
 				state = STATE.MENU;
 			}
+		}else if(state == STATE.END){
+			if(keyCode == KeyEvent.VK_ENTER){
+				state = STATE.SCORE;
+			}
+		}else if(state == STATE.SCORE){
+			if(keyCode == KeyEvent.VK_ENTER){
+				state = STATE.MENU;
+			}
 		}
 	}
 	//input username
@@ -409,6 +444,15 @@ public class Gamestage extends PApplet{
 			//
 		}
 	}*/
+	
+	public void submit(){
+		//System.out.println(cp5_name.get(Textfield.class, "input name").getText());
+		lb.Update(cp5_name.get(Textfield.class, "input name").getText(), score);
+		cp5_name.get(Textfield.class, "input name").clear();
+		state = STATE.MENU;
+		//cp5_name.get
+	}
+	
 	//ControlP5 buttons
 	public void startBtn(){
 		if(state == STATE.MENU){
